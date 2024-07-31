@@ -49,10 +49,9 @@ Create the Lambda function using the AWS CLI:
 aws lambda create-function --function-name checkDbConnection \
   --handler bootstrap \
   --runtime provided.al2 \
-  --role arn:aws:iam::XXX:role/service-role/XXX-role-XXX \
+  --role arn:aws:iam::xxxx:role/service-role/xxx-xxxx-role-xxx \
   --zip-file fileb://lambda.zip \
-  --region eu-central-1 \
-  --environment "Variables={DB_HOST=XXX,DB_PORT=5432,DB_USER=XXX,DB_PASSWORD=XXX,DB_NAME=XXX}"
+  --region eu-central-1 
 ```
 
 #### Redeploying
@@ -71,7 +70,7 @@ aws lambda update-function-configuration --function-name checkDbConnection --tim
 aws ec2 create-security-group \
   --group-name lambdacheckdb-sg-avbo \
   --description "Security group for Lambda function" \
-  --vpc-id vpc-XXX \
+  --vpc-id vpc-06e64af531b400f35 \
   --region eu-central-1
 ```
 
@@ -91,9 +90,9 @@ Allow TCP traffic on port 5432 from the CIDR block 10.0.0.0/8:
 
 ```sh
 aws ec2 authorize-security-group-ingress \
-  --group-id $SG_ID \
+  --group-id "sg-xx" \
   --protocol tcp \
-  --port 5432 \
+  --port 23-10052 \
   --cidr 10.0.0.0/8 \
   --region eu-central-1
 ```
@@ -104,7 +103,7 @@ Allow TCP traffic on port 5432 to the CIDR block 10.0.0.0/8:
 
 ```sh
 aws ec2 authorize-security-group-egress \
-  --group-id $SG_ID \
+  --group-id "sg-xxx" \
   --protocol tcp \
   --port 5432 \
   --cidr 10.0.0.0/8 \
@@ -117,28 +116,28 @@ aws ec2 authorize-security-group-egress \
 
 ```sh
 # Set Variables
-vpc_id="vpc-XXX"
-subnet_ids="subnet-XXX,subnet-XXX,subnet-XXX"
+vpc_id="vpc-xxx"
+subnet_ids="subnet-xxx,subnet-xxx,subnet-xxx"
 region="eu-central-1"
 function_name="checkDbConnection"
-sg_id="sg-XXX"  # The actual security group ID for your Lambda
+sg_id="sg-xxxx"  # The actual security group ID for your Lambda
 
 # Update Lambda Function Configuration
 aws lambda update-function-configuration --function-name $function_name \
   --vpc-config SubnetIds=$subnet_ids,SecurityGroupIds=$sg_id \
   --region $region \
-  --timeout 60
+  --timeout 300
 ```
 
 ## Example Data for the Lambda Function
 
 ```json
 {
-  "db_host": "XXX",
+  "db_host": "xxxxa",
   "db_port": "5432",
-  "db_user": "XXX",
-  "db_password": "XXX",
-  "db_name": "XXX"
+  "db_user": "xxx",
+  "db_password": "P@xxxxx",
+  "db_name": "xxxx"
 }
 ```
 
@@ -147,11 +146,7 @@ aws lambda update-function-configuration --function-name $function_name \
 ### Using Curl
 
 ```sh
-curl -v https://XXX.lambda-url.eu-central-1.on.aws/ \
+curl -v https://gsm2cya2zhkx435sipznidwt4a0nhgcx.lambda-url.eu-central-1.on.aws/ \
      -H "Content-Type: application/json" \
-     -d '{"db_host":"XXX","db_port":"5432","db_user":"XXX","db_password":"XXX","db_name":"XXX"}'
+     -d '{"db_host":"xxx","db_port":"5432","db_user":"xx","db_password":"xxx","db_name":"xx"}'
 ```
-
-## Additional Notes
-
-Ensure all necessary AWS IAM permissions are granted to the roles and users involved in deploying and invoking the Lambda function.
